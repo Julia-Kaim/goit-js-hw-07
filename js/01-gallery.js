@@ -10,9 +10,7 @@ console.log(galleryItems);
 // Zmiana wartości atrybutu src elementu <img> w oknie modalnym przed otworzeniem. Użyj gotowego znacznika okna modalnego z obrazem z przykładów biblioteki basicLightbox.
 
 // Change code below this line
-const qs = (selector) => 
-	document.querySelector(selector);
-;
+const qs = (selector) => document.querySelector(selector);
 const galleryElements = qs(".gallery");
 
 const creatingItems = (item) => {
@@ -23,7 +21,7 @@ const creatingItems = (item) => {
         <img
           class="gallery__image"
           src="${preview}"
-          data-source="${original}"
+          data-photo="${original}"
           alt="${description}"
         />
       </a>
@@ -35,40 +33,36 @@ console.log(galleryItems);
 const imagesMarkup = creatingItems(galleryItems);
 galleryElements.insertAdjacentHTML("beforeend", imagesMarkup);
 
-// const qs = (s) => 
-// 	document.querySelector(s);
-// ;
+const onClick = (event) => {
+	event.preventDefault();
 
-// const galleryContainerEl = qs(".gallery");
-// const imagesMarkup = createItemsMarkup(galleryItems);
-// galleryContainerEl.insertAdjacentHTML("beforeend", imagesMarkup);
+	if (event.target.classList.contains("gallery")) return;
+	const source = event.target.dataset.photo;
+	const instance = basicLightbox.create(
+		`<img src="${source}" width="900" height="500">`,
+	);
 
-// function createItemsMarkup(item) {
-// 	return galleryItems
-// 		.map(({ preview, original, description }) => {
-// 			return `<div class="gallery__item">
-//       <a class="gallery__link" href="${original.value}">
-//         <img
-//           class="gallery__image"
-//           src="${preview}"
-//           data-source="${original}"
-//           alt="${description}"
-//         />
-//       </a>
-//     </div>`;
-// 		})
-// 		.join("");
-// }
-// const onContainerClick = (e) => {
+	instance.show();
+
+	galleryElements.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			instance.close();
+		}
+	});
+};
+
+galleryElements.addEventListener("click", onClick);
+
+// const onClick = (e) => {
 // 	e.preventDefault();
 
 // 	if (e.target.classList.contains("gallery")) return;
-// 	const source = e.target.dataset.source;
+// 	const source = e.target.dataset.photo;
 
 // 	const instance = basicLightbox.create(`
-//     <img src="${source}"width="800" height="600">`);
+//     <img src="${source}"width="900" height="500">`);
 
 // 	instance.show();
 // };
 
-// galleryContainerEl.addEventListener("click", onContainerClick);
+// galleryElements.addEventListener("click", onClick);
